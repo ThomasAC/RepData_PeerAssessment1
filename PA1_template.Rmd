@@ -8,12 +8,38 @@ output:
 
 ## Loading and preprocessing the data
 
+```{r, unzip and read data convert to date, echo = TRUE}
+## Unzip activity.zip if needed
+if( !file.exists("activity.csv") ) {
+  temp <- tempfile()
+  file <- unzip("activity.zip")
+  unlink(temp)
+}
 
+## Read data
+activity <- read.csv("activity.csv")
+
+## convert date variable to dates
+activity$date <- as.Date(activity$date, format = "%Y-%m-%d")
+```
 
 ## What is mean total number of steps taken per day?
 
+```{r, echo = TRUE }
+
+## Total number of steps taken per day
+SumStepsPerDay <- with( activity, tapply( steps, date, sum, na.rm = TRUE ))
+
+## histogram of the total number of steps taken each day
+library(ggplot2)
+qplot( SumStepsPerDay) + geom_vline( xintercept = mean(SumStepsPerDay), col = "red", size = 2) + geom_vline( xintercept = median(SumStepsPerDay), col = "magenta", size = 2)
 
 
+MeanStepsPerDay <- mean(SumStepsPerDay)
+print(MeanStepsPerDay)
+MedianStepsPerDay <- median(SumStepsPerDay)
+print(MedianStepsPerDay)
+```
 ## What is the average daily activity pattern?
 
 
