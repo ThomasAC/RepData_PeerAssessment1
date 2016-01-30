@@ -29,17 +29,29 @@ activity$date <- as.Date(activity$date, format = "%Y-%m-%d")
 
 ## Total number of steps taken per day
 SumStepsPerDay <- with( activity, tapply( steps, date, sum, na.rm = TRUE ))
+```
 
+Histogram of total number of steps per day
+```{r, echo = TRUE, fig.height=4}
 ## histogram of the total number of steps taken each day
 library(ggplot2)
-qplot( SumStepsPerDay) + geom_vline( xintercept = mean(SumStepsPerDay), col = "red", size = 2) + geom_vline( xintercept = median(SumStepsPerDay), col = "magenta", size = 2)
-
-
-MeanStepsPerDay <- mean(SumStepsPerDay)
-print(MeanStepsPerDay)
-MedianStepsPerDay <- median(SumStepsPerDay)
-print(MedianStepsPerDay)
+p <- qplot( SumStepsPerDay) + geom_vline( xintercept = mean(SumStepsPerDay), col = "red", size = 2) + geom_vline( xintercept = median(SumStepsPerDay), col = "magenta", size = 2)
+print(p)
+png( file = "./figures/Steps_per_Day_Histogram.png", height = 480, width = 480, unit = "px")
+print(p)
+dev.off()
 ```
+
+## Calculates Mean and median of steps taken each day
+MeanStepsPerDay <- mean(SumStepsPerDay)
+#print(MeanStepsPerDay)
+MedianStepsPerDay <- median(SumStepsPerDay)
+#print(MedianStepsPerDay)
+```
+
+The mean and median of steps taken per day are `r MeanStepsPerDay` and `r MedianStepsPerDay` respectively.
+
+
 ## What is the average daily activity pattern?
 
 
