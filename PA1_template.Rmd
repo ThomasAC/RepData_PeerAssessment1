@@ -1,8 +1,8 @@
 ---
-title: "Reproducible Research: Peer Assessment 1"
-output: 
+title: 'Reproducible Research: Peer Assessment 1'
+output:
   html_document:
-    keep_md: true
+    keep_md: yes
 ---
 
 
@@ -29,6 +29,8 @@ activity$date <- as.Date(activity$date, format = "%Y-%m-%d")
 
 ## Total number of steps taken per day
 SumStepsPerDay <- with( activity, tapply( steps, date, sum, na.rm = TRUE ))
+## Or
+SumStepsPerDay2<- with( activity, aggregate( steps ~ date, FUN = sum, na.rm = TRUE))
 ```
 
 Histogram of total number of steps per day
@@ -37,6 +39,9 @@ Histogram of total number of steps per day
 library(ggplot2)
 p <- qplot( SumStepsPerDay, main = "Number of steps taken each day") + geom_vline( xintercept = mean(SumStepsPerDay), col = "red", size = 2) + geom_vline( xintercept = median(SumStepsPerDay), col = "magenta", size = 2 )
 print(p)
+
+p2 <- qplot(x = steps, data = SumStepsPerDay2, main = "Number of steps taken each day")
+print(p2)
 # Not sure necessary
 #png( file = "./figures/Steps_per_Day_Histogram.png", height = 480, width = 480, unit = "px")
 #print(p)
@@ -46,16 +51,33 @@ print(p)
 ```{r, mean and median, echo =TRUE }
 ## Calculates Mean and median of steps taken each day
 MeanStepsPerDay <- mean(SumStepsPerDay)
-#print(MeanStepsPerDay)
+print(MeanStepsPerDay)
 MedianStepsPerDay <- median(SumStepsPerDay)
-#print(MedianStepsPerDay)
+print(MedianStepsPerDay)
+
+MeanStepsPerDay2 <- mean(SumStepsPerDay2$steps, na.rm=TRUE)
+print(MeanStepsPerDay2)
+MedianStepsPerDay2 <- median(SumStepsPerDay2$steps, na.rm=TRUE)
+print(MedianStepsPerDay2)
 ```
 
-The mean and median of steps taken per day are `r MeanStepsPerDay` and `r MedianStepsPerDay` respectively.
-
+The mean and median of steps taken per day are `r MeanStepsPerDay2` and `r MedianStepsPerDay2` respectively.
+ISSUE HERE IN THE REPORTING FOR MEAN 
 
 ## What is the average daily activity pattern?
+1. Make a time series plot (i.e. `type = "l"`) of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis)
 
+2. Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
+
+```{r , echo = TRUE}
+MeanStepsPerInterval <- with( activity, aggregate( steps ~ interval, FUN = mean, na.rm = TRUE ))
+#MeanStepsPerInterval_df <- cbind(MeanStepsPerInterval, unique(activity$interval)
+
+qplot( x = interval, y = steps, data = MeanStepsPerInterval, geom = "line", main = "Average number of steps per 5 minutes intervals")
+
+MaxInterval <- MeanStepsPerInterval$interval[ which.max( MeanStepsPerInterval$steps  ) ] 
+```
+The time interval containing the maximum number of steps is `r MaxInterval`
 
 
 ## Imputing missing values
