@@ -32,16 +32,18 @@ SumStepsPerDay <- with( activity, tapply( steps, date, sum, na.rm = TRUE ))
 ```
 
 Histogram of total number of steps per day
-```{r, echo = TRUE, fig.height=4}
+```{r histogram, echo = TRUE, fig.height=4}
 ## histogram of the total number of steps taken each day
 library(ggplot2)
-p <- qplot( SumStepsPerDay) + geom_vline( xintercept = mean(SumStepsPerDay), col = "red", size = 2) + geom_vline( xintercept = median(SumStepsPerDay), col = "magenta", size = 2)
+p <- qplot( SumStepsPerDay, main = "Number of steps taken each day") + geom_vline( xintercept = mean(SumStepsPerDay), col = "red", size = 2) + geom_vline( xintercept = median(SumStepsPerDay), col = "magenta", size = 2 )
 print(p)
-png( file = "./figures/Steps_per_Day_Histogram.png", height = 480, width = 480, unit = "px")
-print(p)
-dev.off()
+# Not sure necessary
+#png( file = "./figures/Steps_per_Day_Histogram.png", height = 480, width = 480, unit = "px")
+#print(p)
+#dev.off()
 ```
 
+```{r, mean and median, echo =TRUE }
 ## Calculates Mean and median of steps taken each day
 MeanStepsPerDay <- mean(SumStepsPerDay)
 #print(MeanStepsPerDay)
