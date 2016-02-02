@@ -1,8 +1,11 @@
 ---
-title: 'Reproducible Research: Peer Assessment 1'
-output:html_document:
-keep_md: yes
+title: "Reproducible Research: Peer Assessment 1"
+date: "02/02/2016"
+output: html_document
+keep_md: true
 ---
+
+# Reproducible Research: Peer Assessment 1
 
 Created February 2016
 
@@ -33,7 +36,7 @@ activity <- read.csv("activity.csv")
 activity$date <- as.Date(activity$date, format = "%Y-%m-%d")
 ```
 
-## Mean total number of steps taken per day
+## What is mean total number of steps taken per day?
 
 ```{r, Number steps per day, echo = TRUE }
 
@@ -63,7 +66,7 @@ print(MedianStepsPerDay)
 
 The mean and median of steps taken per day are `r MeanStepsPerDay` and `r MedianStepsPerDay` respectively.
 
-##  Average daily activity pattern
+## What is the average daily activity pattern?
 
 Time series plot of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis)
 
@@ -139,23 +142,23 @@ ggplot(data = NewSumStepsPerDay, aes(x = ImputedSteps)) + geom_histogram(stat  =
 ### Comparing mean and median values
 
 ```{r, New Mean and Median}
-NewMeanStepsPerDay <- round( mean(NewSumStepsPerDay$ImputedSteps), digit = 2 )
+NewMeanStepsPerDay <- mean(NewSumStepsPerDay$ImputedSteps)
 print(NewMeanStepsPerDay)
-NewMedianStepsPerDay <- round( median(NewSumStepsPerDay$ImputedSteps), digit = 2)
+NewMedianStepsPerDay <- median(NewSumStepsPerDay$ImputedSteps)
 print(NewMedianStepsPerDay)
 
 ```
 
 The mean of steps taken per day is unchanged (`r MeanStepsPerDay` with NA and `r NewMeanStepsPerDay` with imputed data. The median is changes from `r MedianStepsPerDay` with NA to `r NewMedianStepsPerDay`.
 
-## Differences in activity patterns between weekdays and weekends
+## Are there differences in activity patterns between weekdays and weekends?
 
 Create a daytype factor variable with two levels, "weekday" and "weekend"
 ```{r, Set a weekday/weekend factor, echo = TRUE }
 
 activity$weekday <- weekdays(as.Date(activity$date))
-WeekendsDay <- c("Saturday", "Sunday")
-activity$daytype <- as.factor( ifelse(activity$weekday %in% WeekendsDay, "weekend", "weekday") )
+WeekendDays <- c("Saturday", "Sunday")
+activity$daytype <- as.factor( ifelse(activity$weekday %in% WeekendDays, "weekend", "weekday") )
 
 ```
 
@@ -166,7 +169,7 @@ Panel Plot
 MeanStepsPerIntervalWeek <- with( activity, aggregate( ImputedSteps ~ interval + daytype, FUN = mean, na.rm = TRUE ))
 
 ## Panel plot
-ggplot(data = MeanStepsPerIntervalWeek , aes(x = interval, y = ImputedSteps, colour = daytype)) + geom_line(stat  ="identity") + ggtitle("Mean steps per 5 minutes interval in weekdays and weekends" ) + facet_grid(.~daytype)
+ggplot(data = MeanStepsPerIntervalWeek , aes(x = interval, y = ImputedSteps, colour = daytype)) + geom_line(stat = "identity") + ggtitle("Mean steps per 5 minutes interval in weekdays and weekends" ) + facet_grid(daytype ~ .)
 
 ```
 
