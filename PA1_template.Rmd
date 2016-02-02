@@ -4,10 +4,14 @@ output:html_document:
 keep_md: yes
 ---
 
-# Reproducible Research: Peer Assessment 1
-
-SETDIGIT AND LOCALE
 Created February 2016
+
+## Set options for the assignement
+```{r, set options, echo = TRUE}
+options(scipen=999)
+Sys.setlocale("LC_ALL", 'en_US.UTF-8') # Overrides Locale for the Weekdays part
+```
+
 
 ## Loading and preprocessing the data
 
@@ -38,22 +42,18 @@ SumStepsPerDay<- with( activity, aggregate( steps ~ date, FUN = sum))
 ```
 
 ### Histogram of total number of steps per day
-```{r histogram, echo = TRUE, fig.height=4}
+```{r, steps per day histogram, echo = TRUE, fig.height=4}
 
 ## histogram of the total number of steps taken each day
 library(ggplot2)
-g <- ggplot(data = SumStepsPerDay, aes(x = steps)) + geom_histogram(stat  ="bin", fill = "steelblue", binwidth = 1000) + ggtitle("Number of steps taken each day" ) + xlab("Steps per day")
-print(g)
-#png( file = "./figure/Steps_per_Day_Histogram.png", height = 480, width = 480, unit = "px")
-#print(p)
-#dev.off()
+ggplot(data = SumStepsPerDay, aes(x = steps)) + geom_histogram(stat  ="bin", fill = "steelblue", binwidth = 1000) + ggtitle("Number of steps taken each day" ) + xlab("Steps per day")
 
 ```
 
 ```{r, mean and median, echo =TRUE }
 ## Calculates Mean (rounded) and median of steps taken each day
 
-MeanStepsPerDay <- round( mean(SumStepsPerDay$steps), digit = 2 )
+MeanStepsPerDay <- mean(SumStepsPerDay$steps)
 print(MeanStepsPerDay)
 
 MedianStepsPerDay <- median(SumStepsPerDay$steps)
@@ -72,8 +72,8 @@ Time series plot of the 5-minute interval (x-axis) and the average number of ste
 ## Average number of steps per 5 minutes interval
 MeanStepsPerInterval <- with( activity, aggregate( steps ~ interval, FUN = mean, na.rm = TRUE ))
 
-q <- qplot( x = interval, y = steps, data = MeanStepsPerInterval, geom = "line", main = "Average number of steps per 5 minutes intervals")
-print(q)
+qplot( x = interval, y = steps, data = MeanStepsPerInterval, geom = "line", main = "Average number of steps per 5 minutes intervals")
+
 
 MaxInterval <- MeanStepsPerInterval$interval[ which.max( MeanStepsPerInterval$steps  ) ] 
 MaxSteps <- MeanStepsPerInterval$steps[ which.max( MeanStepsPerInterval$steps  ) ] 
@@ -104,7 +104,7 @@ There are 8 days that contain no data at all, while the others appear to be comp
 
 For each of those, each time interval will be replaced by the mean number of steps for this particular time interval over the entire dataset
 
-**Note** This will add a new column (ImputedSteps) to the activity dataset rather than replacing the steps variable
+**Note:** This will add a new column (ImputedSteps) to the activity dataset rather than replacing the steps variable.
 
 ```{r, impute missing data, echo = TRUE}
 
@@ -124,19 +124,19 @@ activity$ImputedSteps <- ImputedSteps
 
 ```
 
-#### The new histogram with imputed values
+### The new histogram with imputed values
 
-```{r, New Histogram, echo = TRUE, fig.height=4 }
+```{r, Imputed Data Histogram, echo = TRUE, fig.height=4 }
 
 ## Calculate sum of steps per days
 NewSumStepsPerDay<- with( activity, aggregate( ImputedSteps ~ date, FUN = sum))
 
 ## Creates histogram
-g <- ggplot(data = NewSumStepsPerDay, aes(x = ImputedSteps)) + geom_histogram(stat  ="bin", fill = "magenta", binwidth = 1000) + ggtitle("Number of steps taken each day (Imputed data)" ) + xlab("Steps per day")
-print(g)
+ggplot(data = NewSumStepsPerDay, aes(x = ImputedSteps)) + geom_histogram(stat  ="bin", fill = "magenta", binwidth = 1000) + ggtitle("Number of steps taken each day (Imputed data)" ) + xlab("Steps per day")
+
 ```
 
-#### Comparing mean and median values
+### Comparing mean and median values
 
 ```{r, New Mean and Median}
 NewMeanStepsPerDay <- round( mean(NewSumStepsPerDay$ImputedSteps), digit = 2 )
@@ -166,8 +166,8 @@ Panel Plot
 MeanStepsPerIntervalWeek <- with( activity, aggregate( ImputedSteps ~ interval + daytype, FUN = mean, na.rm = TRUE ))
 
 ## Panel plot
-g <- ggplot(data = MeanStepsPerIntervalWeek , aes(x = interval, y = ImputedSteps, colour = daytype)) + geom_line(stat  ="identity") + ggtitle("Mean steps per 5 minutes interval in weekdays and weekends" ) + facet_grid(.~daytype)
-print(g)
+ggplot(data = MeanStepsPerIntervalWeek , aes(x = interval, y = ImputedSteps, colour = daytype)) + geom_line(stat  ="identity") + ggtitle("Mean steps per 5 minutes interval in weekdays and weekends" ) + facet_grid(.~daytype)
+
 ```
 
 The mean number of steps at early time intervals appears to be higher in weekdays than for weekends
