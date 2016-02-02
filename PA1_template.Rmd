@@ -4,6 +4,10 @@ output:html_document:
 keep_md: yes
 ---
 
+# Reproducible Research: Peer Assessment 1
+
+SETDIGIT AND LOCALE
+Created February 2016
 
 ## Loading and preprocessing the data
 
@@ -128,7 +132,7 @@ activity$ImputedSteps <- ImputedSteps
 NewSumStepsPerDay<- with( activity, aggregate( ImputedSteps ~ date, FUN = sum))
 
 ## Creates histogram
-g <- ggplot(data = NewSumStepsPerDay, aes(x = ImputedSteps)) + geom_histogram(stat  ="bin", fill = "steelblue", binwidth = 1000) + ggtitle("Number of steps taken each day (Imputed data)" ) + xlab("Steps per day")
+g <- ggplot(data = NewSumStepsPerDay, aes(x = ImputedSteps)) + geom_histogram(stat  ="bin", fill = "magenta", binwidth = 1000) + ggtitle("Number of steps taken each day (Imputed data)" ) + xlab("Steps per day")
 print(g)
 ```
 
@@ -155,15 +159,14 @@ activity$daytype <- as.factor( ifelse(activity$weekday %in% WeekendsDay, "weeken
 
 ```
 
-
-
+Panel Plot
 ```{r, Panel plot, echo = TRUE}
 
 ## Calculate mean steps per interval
 MeanStepsPerIntervalWeek <- with( activity, aggregate( ImputedSteps ~ interval + daytype, FUN = mean, na.rm = TRUE ))
 
 ## Panel plot
-g <- ggplot(data = MeanStepsPerIntervalWeek , aes(x = interval, y = ImputedSteps, colour = daytype)) + geom_line(stat  ="identity") + ggtitle("Mean steps per 5 minutes interval in weekdays and weekends" ) + facet_grid(daytype~.)
+g <- ggplot(data = MeanStepsPerIntervalWeek , aes(x = interval, y = ImputedSteps, colour = daytype)) + geom_line(stat  ="identity") + ggtitle("Mean steps per 5 minutes interval in weekdays and weekends" ) + facet_grid(.~daytype)
 print(g)
 ```
 
